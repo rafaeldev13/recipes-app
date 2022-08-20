@@ -3,5 +3,5 @@ export function saveOnStorage(key, value) {
 }
 
 export function getFromStorage(key) {
-  localStorage.getItem(key);
+  return localStorage.getItem(key);
 }
