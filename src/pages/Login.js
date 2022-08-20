@@ -7,13 +7,13 @@ function Login() {
   const MIN_PASSWORD_LENGTH = 7;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [shouldRedirect, setRedirect] = useState(false);
 
   const handleClick = () => {
     saveOnStorage('user', JSON.stringify({ email }));
     saveOnStorage('mealsToken', 1);
     saveOnStorage('cocktailsToken', 1);
-    setShouldRedirect(true);
+    setRedirect(true);
   };
 
   return (
