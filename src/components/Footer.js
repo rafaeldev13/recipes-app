@@ -9,7 +9,7 @@ function Footer() {
   const { setCurrType } = useContext(recipeContext);
 
   const handleType = ({ target }) => {
-    setCurrType(target.id);
+    setCurrType(target.id.charAt(0).toUpperCase() + target.id.slice(1));
     history.push(`/${target.id}`);
   };
 
