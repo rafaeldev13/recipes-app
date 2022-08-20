@@ -1,13 +1,13 @@
 import React from 'react';
 import SearchBar from '../components/SearchBar';
 
-function Login() {
+function Foods() {
   return (
     <div>
-      Login
+      Foods
       <SearchBar />
     </div>
   );
 }
 
-export default Login;
+export default Foods;
