@@ -32,15 +32,17 @@ function SearchBar() {
       returned = result;
     } else {
       const result = await fetchOption(currType, option, toSearch);
+      console.log(result);
       returned = result;
       setCurrRecipes(result);
     }
     const type = returned.meals ? 'meals' : 'drinks';
+    const typeTwo = returned.drinks ? 'drinks' : 'foods';
     if (returned[type].length === 1) {
       const typeId = returned.drinks
         ? returned.drinks[0].idDrink
         : returned.meals[0].idMeal;
-      history.push(`/${type}/${typeId}`);
+      history.push(`/${typeTwo}/${typeId}`);
     }
   };
 

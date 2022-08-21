@@ -12,7 +12,7 @@ function Cards({ array }) {
   };
 
   const newArray = array[type].slice(0, TWELVE);
-  return newArray.map((recipe) => {
+  return newArray.map((recipe, index) => {
     const id = recipe.idDrink
       ? recipe.idDrink
       : recipe.idMeal;
@@ -28,7 +28,7 @@ function Cards({ array }) {
         id={ id }
         role="button"
         tabIndex={ id }
-        data-testid={ `${id}-recipe-card` }
+        data-testid={ `${index}-recipe-card` }
         onClick={ handleRedirect }
         onKeyDown={ handleRedirect }
       >
@@ -37,9 +37,9 @@ function Cards({ array }) {
           alt={ name }
           id={ id }
           width="200px"
-          data-testid={ `${id}-card-image` }
+          data-testid={ `${index}-card-img` }
         />
-        <p id={ id } data-testid={ `${id}-card-name` }>{ `${name}` }</p>
+        <p id={ id } data-testid={ `${index}-card-name` }>{ `${name}` }</p>
       </div>
     );
   });

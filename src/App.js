@@ -15,9 +15,13 @@ function App() {
     <RecipesProvider>
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route exact path="/foods" component={ Recipes } />
+        <Route exact path="/foods" foodOrDrink="Foods" component={ Recipes } />
         <Route path="/foods/:id" component={ RecipeDetails } />
-        <Route exact path="/drinks" component={ Recipes } />
+        <Route
+          exact
+          path="/drinks"
+          render={ (props) => <Recipes foodOrDrink="Drinks" { ...props } /> }
+        />
         <Route path="/drinks/:id" component={ RecipeDetails } />
         <Route path="/profile" component={ Profile } />
         <Route path="/done-recipes" component={ DoneRecipes } />
