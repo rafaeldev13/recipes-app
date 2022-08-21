@@ -42,7 +42,7 @@ describe('Testa a página Login', () => {
         userEvent.click(button);
 
         expect(localStorage.setItem).toHaveBeenCalledTimes(3);
-        expect(localStorage.setItem).toBeCalledWith("user", "{\"email\":\"teste@teste.com\"}");
+        expect(localStorage.setItem).toBeCalledWith("user", ["teste@teste.com"]);
         expect(localStorage.setItem).toBeCalledWith("mealsToken", 1);
         expect(localStorage.setItem).toBeCalledWith("cocktailsToken", 1);
     })
