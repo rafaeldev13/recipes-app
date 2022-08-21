@@ -50,7 +50,7 @@ function SearchBar() {
       <label htmlFor="searchInput">
         <input
           id="searchInput"
-          data-testid=""
+          data-testid="search-input"
           placeholder="Search Recipe"
           value={ toSearch }
           onChange={ handleChange }

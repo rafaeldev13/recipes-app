@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { recipeContext } from '../context/RecipesProvider';
-import handleCards from '../helpers/searchBarHelp';
+import Cards from '../components/Cards';
 import { fetchCategory, fetchIngredient, fetchOption } from '../services/getAPI';
 import { FIVE } from '../helpers/magicNumbers';
 
@@ -64,7 +64,7 @@ function Recipes() {
       { (Object.keys(categories)[0].length > 1)
           && handleCategories(categories) }
       { (Object.keys(currRecipes)[0].length > 1)
-          && handleCards(currRecipes) }
+          && <Cards array={ currRecipes } /> }
       <Footer />
     </div>
   );

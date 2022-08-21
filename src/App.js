@@ -7,6 +7,7 @@ import Recipes from './pages/Recipes';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
+import RecipeDetails from './pages/RecipeDetails';
 import RecipesProvider from './context/RecipesProvider';
 
 function App() {
@@ -15,7 +16,9 @@ function App() {
       <Switch>
         <Route exact path="/" component={ Login } />
         <Route exact path="/foods" component={ Recipes } />
+        <Route path="/foods/:id" component={ RecipeDetails } />
         <Route exact path="/drinks" component={ Recipes } />
+        <Route path="/drinks/:id" component={ RecipeDetails } />
         <Route path="/profile" component={ Profile } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="favorite-recipes" component={ FavoriteRecipes } />
