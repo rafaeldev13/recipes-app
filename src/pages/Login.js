@@ -10,7 +10,7 @@ function Login() {
   const [shouldRedirect, setRedirect] = useState(false);
 
   const handleClick = () => {
-    saveOnStorage('user', Object.values({ email }));
+    saveOnStorage('user', JSON.stringify({ email }));
     saveOnStorage('mealsToken', 1);
     saveOnStorage('cocktailsToken', 1);
     setRedirect(true);

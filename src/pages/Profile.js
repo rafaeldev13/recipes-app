@@ -5,6 +5,11 @@ import { getFromStorage } from '../helpers/handleLocalStorage';
 function Profile() {
   const history = useHistory();
 
+  const getEmail = () => {
+    const email = getFromStorage('user');
+    return Object.values(JSON.parse(email));
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     history.push('/');
@@ -12,9 +17,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <p data-testid="profile-email" className="profile-email">
-        {getFromStorage('user')}
-      </p>
+      <p data-testid="profile-email" className="profile-email">{getEmail()}</p>
       <button
         data-testid="profile-done-btn"
         className="profile-done-btn"
