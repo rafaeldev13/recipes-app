@@ -39,7 +39,6 @@ describe('Testa a página Profile', () => {
 
     it('Verifica se ao clicar em "Logout" apaga o localStorage e redireciona para login("/")', () => {
         const { history } = renderWithRouter(<Profile />);
-        Storage.prototype.getItem = jest.fn();
 
         const button = screen.getByRole('button', { name: "Logout" });
         userEvent.click(button);
