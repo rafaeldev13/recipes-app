@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { getFromStorage } from '../helpers/handleLocalStorage';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 function Profile() {
   const history = useHistory();
@@ -17,6 +19,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
+      <Header hideSearchIcon />
       <p data-testid="profile-email" className="profile-email">{getEmail()}</p>
       <button
         data-testid="profile-done-btn"
@@ -42,7 +45,7 @@ function Profile() {
       >
         Logout
       </button>
-    </div>
+      <Footer />
   );
 }
 
