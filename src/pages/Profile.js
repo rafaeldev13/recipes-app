@@ -9,7 +9,9 @@ function Profile() {
 
   const getEmail = () => {
     const email = getFromStorage('user');
-    return Object.values(JSON.parse(email));
+    if (email !== null) {
+      return Object.values(JSON.parse(email));
+    }
   };
 
   const handleLogout = () => {
@@ -19,7 +21,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <Header hideSearchIcon />
+      <Header title="Profile" hideSearchIcon />
       <p data-testid="profile-email" className="profile-email">{getEmail()}</p>
       <button
         data-testid="profile-done-btn"
