@@ -68,3 +68,16 @@ export async function fetchCategory(type) {
     return data;
   }
 }
+
+export async function fetchRecipe(type, id) {
+  if (type === 'Foods') {
+    const response = await fetch(`${URL_FOOD}lookup.php?i=${id}`);
+    const data = await response.json();
+    return data;
+  }
+  if (type === 'Drinks') {
+    const response = await fetch(`${URL_DRINK}lookup.php?i=${id}`);
+    const data = await response.json();
+    return data;
+  }
+}

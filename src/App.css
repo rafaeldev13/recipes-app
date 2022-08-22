@@ -78,3 +78,22 @@
   text-align: center;
   width: 100%;
 }
+
+/* video-responsive copied from
+https://dev.to/bravemaster619/
+simplest-way-to-embed-a-youtube-video-in-your-react-app-3bk2 */
+
+.video-responsive {
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+
+.video-responsive iframe {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
