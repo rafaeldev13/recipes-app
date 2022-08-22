@@ -16,7 +16,9 @@ export async function fetchIngredient(type, option, value) {
   if (type === 'Drinks') {
     try {
       const response = await fetch(`${URL_DRINK}filter.php?${converted}=${value}`);
+      console.log(response);
       const data = await response.json();
+      console.log(data);
       return data;
     } catch (err) {
       global.alert(NOT_FOUND);
@@ -38,21 +40,18 @@ export async function fetchOption(type, option, value) {
     }
   }
   if (type === 'Drinks') {
-    // try {
-    //   const response = await fetch(`${URL_DRINK}search.php?${converted}=${value}`);
-    //   const data = await response.json();
-    //   return data;
-    // } catch (err) {
-    //   global.alert(NOT_FOUND);
-    //   return { drinks: [] };
-    // }
-    const response = await fetch(`${URL_DRINK}search.php?${converted}=${value}`);
-    const data = await response.json();
-    if (data.drinks !== null) {
+    try {
+      const response = await fetch(`${URL_DRINK}search.php?${converted}=${value}`);
+      const data = await response.json();
+      if (data.drinks === null) {
+        global.alert(NOT_FOUND);
+        return { drinks: [] };
+      }
       return data;
+    } catch (err) {
+      global.alert(NOT_FOUND);
+      return { drinks: [] };
     }
-    global.alert(NOT_FOUND);
-    return { drinks: [] };
   }
 }
 
