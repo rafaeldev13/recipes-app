@@ -44,38 +44,33 @@ function RecipesDetails() {
     );
   };
 
-  const mapIngMea = (array) => (
-    array.map((string, index) => (
-      <p
-        key={ index }
-        data-testid={ `${index}-ingredient-name-and-measure` }
-      >
-        {string}
-      </p>))
-  );
-
-  const handleIngMeaFood = (data) => {
-    const filteredIngredients = data.filter((key) => key[0]
-      .includes('strIngredient') && key[1] !== '');
-    const ingArray = filteredIngredients.reduce((acc, value) => [...acc, value[1]], []);
-    const filteredMeasures = data.filter((key) => key[0]
-      .includes('strMeasure') && key[1] !== ' ');
-    const meaArray = filteredMeasures.reduce((acc, value) => [...acc, value[1]], []);
-    const arrayToMap = ingArray.map((ing, index) => `- ${ing} - ${meaArray[index]}`);
-
-    return mapIngMea(arrayToMap);
-  };
+  // const mapIngMea = (array) => (
+  //   array.map((string, index) => (
+  //     <p
+  //       key={ index }
+  //       data-testid={ `${index}-ingredient-name-and-measure` }
+  //     >
+  //       {string}
+  //     </p>))
+  // );
 
   const handleIngMeaDrink = (data) => {
     const filteredIngredients = data.filter((key) => key[0]
-      .includes('strIngredient') && key[1] !== null);
+      .includes('strIngredient') && key[1] !== (null && ''));
     const ingArray = filteredIngredients.reduce((acc, value) => [...acc, value[1]], []);
     const filteredMeasures = data.filter((key) => key[0]
-      .includes('strMeasure') && key[1] !== null);
+      .includes('strMeasure') && key[1] !== (null && ' '));
     const meaArray = filteredMeasures.reduce((acc, value) => [...acc, value[1]], []);
     const arrayToMap = ingArray.map((ing, index) => `- ${ing} - ${meaArray[index]}`);
 
-    return mapIngMea(arrayToMap);
+    return (
+      arrayToMap.map((string, index) => (
+        <p
+          key={ index }
+          data-testid={ `${index}-ingredient-name-and-measure` }
+        >
+          {string}
+        </p>)));
   };
 
   const recipeRender = () => {
@@ -101,9 +96,7 @@ function RecipesDetails() {
             <h3 data-testid="recipe-category">
               { currRecipe[LowerType][0].strAlcoholic }
             </h3>) }
-        { currRecipe.drinks
-          ? handleIngMeaDrink(Object.entries(currRecipe[LowerType][0]))
-          : handleIngMeaFood(Object.entries(currRecipe[LowerType][0])) }
+        {currRecipe.drinks && handleIngMeaDrink(Object.entries(currRecipe[LowerType][0]))}
         <p data-testid="instructions">
           { currRecipe[LowerType][0].strInstructions }
         </p>
