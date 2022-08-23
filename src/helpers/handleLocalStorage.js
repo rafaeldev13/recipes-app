@@ -7,7 +7,7 @@ export function getFromStorage(key) {
 }
 
 export function saveInProgressRecipes(type, id, ingredientsList) {
-  const category = type === 'food' ? 'meals' : 'cocktails';
+  const category = type === 'foods' ? 'meals' : 'cocktails';
   const recipe = { [id]: ingredientsList };
   const prevStorage = localStorage.getItem('inProgressRecipes');
 
@@ -69,9 +69,17 @@ export function removeFavoriteOrDoneRecipes(id, isDone = false) {
   }
 }
 
-export function getFavoriteOrDoneRecipes(isDone = false) {
-  const key = isDone ? 'doneRecipes' : 'favoriteRecipes';
-  const prevStorage = localStorage.getItem(key);
+export function getDoneRecipes() {
+  const prevStorage = localStorage.getItem('doneRecipes');
+  if (prevStorage === null) {
+    return [];
+  }
+
+  return JSON.parse(prevStorage);
+}
+
+export function getFavoriteRecipes() {
+  const prevStorage = localStorage.getItem('favoriteRecipes');
   if (prevStorage === null) {
     return {};
   }

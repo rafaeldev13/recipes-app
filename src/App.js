@@ -9,12 +9,14 @@ import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
 import RecipeDetails from './pages/RecipeDetails';
 import RecipesProvider from './context/RecipesProvider';
+import RecipeInProgress from './pages/RecipeInProgress';
 
 function App() {
   return (
     <RecipesProvider>
       <Switch>
         <Route exact path="/" component={ Login } />
+        <Route exact path="/:type/:id/in-progress" component={ RecipeInProgress } />
         <Route
           exact
           path="/foods"
