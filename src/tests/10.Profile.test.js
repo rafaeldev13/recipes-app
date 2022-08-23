@@ -3,26 +3,39 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../helpers/renderWithRouter';
 import Profile from '../pages/Profile';
+import RecipesProvider from '../context/RecipesProvider';
 
 describe('Testa a página Profile', () => {
 
     beforeEach(() => localStorage.setItem("user", "{\"email\":\"teste@teste.com\"}"));
 
     it('Verifica se o email salvo no localStorage é renderizado ', () => {
-        render(<Profile />);
+        render(
+            <RecipesProvider>
+                <Profile />
+            </RecipesProvider>
+            );
         expect(screen.getByTestId("profile-email").textContent).toBe("teste@teste.com");
     })
 
     it('Verifica se os botões "Done Recipes", "Favorite Recipes" e "Logout" são renderizados', () => {
-        render(<Profile />);
-        expect(screen.getAllByRole('button')).toHaveLength(3);
+        render(
+            <RecipesProvider>
+                <Profile />
+            </RecipesProvider>
+            );
+        expect(screen.getAllByRole('button')).toHaveLength(5);
         expect(screen.getByRole('button', { name: "Done Recipes" })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: "Favorite Recipes" })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: "Logout" })).toBeInTheDocument();
     })
 
     it('Verifica se ao clicar em "Done Recipes" redireciona para "/done-recipes"', () => {
-        const { history } = renderWithRouter(<Profile />);
+        const { history } = renderWithRouter(
+            <RecipesProvider>
+                <Profile />
+            </RecipesProvider>
+            );
         const button = screen.getByRole('button', { name: "Done Recipes" });
 
         userEvent.click(button);
@@ -30,7 +43,11 @@ describe('Testa a página Profile', () => {
     })
 
     it('Verifica se ao clicar em "Favorite Recipes" redireciona para "/favorite-recipes"', () => {
-        const { history } = renderWithRouter(<Profile />);
+        const { history } = renderWithRouter(
+            <RecipesProvider>
+                <Profile />
+            </RecipesProvider>
+            );
         const button = screen.getByRole('button', { name: "Favorite Recipes" });
 
         userEvent.click(button);
@@ -38,7 +55,11 @@ describe('Testa a página Profile', () => {
     })
 
     it('Verifica se ao clicar em "Logout" apaga o localStorage e redireciona para login("/")', () => {
-        const { history } = renderWithRouter(<Profile />);
+        const { history } = renderWithRouter(
+        <RecipesProvider>
+            <Profile />
+        </RecipesProvider>
+        );
 
         const button = screen.getByRole('button', { name: "Logout" });
         userEvent.click(button);
