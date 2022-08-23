@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import propTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import Carousel from 'react-multi-carousel';
 import { SIX } from '../helpers/magicNumbers';
 import { fetchOption } from '../services/getAPI';
+import 'react-multi-carousel/lib/styles.css';
 
 function DetailCards({ typeOf }) {
   const history = useHistory();
@@ -22,7 +24,6 @@ function DetailCards({ typeOf }) {
   };
 
   const recomendedRenderer = (data) => {
-    // console.log(recomended);
     const type = data.drinks ? 'drinks' : 'meals';
     const newArray = data[type].slice(0, SIX);
     const result = newArray.map((recipe, index) => {
@@ -59,10 +60,28 @@ function DetailCards({ typeOf }) {
     return result;
   };
 
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 2,
+    },
+  };
   return (
-    <div>
+    <Carousel responsive={ responsive }>
       { (recomended === undefined) ? <p>loading</p> : recomendedRenderer(recomended) }
-    </div>
+    </Carousel>
   );
 }
 
