@@ -6,6 +6,8 @@ import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import DetailCards from '../components/DetailCards';
 import { fetchRecipe } from '../services/getAPI';
+import { getDoneRecipes,
+  getInProgressRecipes, saveInProgressRecipes } from '../helpers/handleLocalStorage';
 
 function RecipesDetails() {
   const [currRecipe, setCurrRecipe] = useState();
@@ -23,11 +25,6 @@ function RecipesDetails() {
       setCurrRecipe(result);
     };
     getInfo();
-    // const getRecomended = async () => {
-    //   const currRecomended = await fetchOption(type, 'name', '');
-    //   setRenderRecomended(currRecomended);
-    // };
-    // getRecomended();
   }, []);
 
   const handleYoutube = (url) => {
@@ -48,25 +45,18 @@ function RecipesDetails() {
     );
   };
 
-  // const mapIngMea = (array) => (
-  //   array.map((string, index) => (
-  //     <p
-  //       key={ index }
-  //       data-testid={ `${index}-ingredient-name-and-measure` }
-  //     >
-  //       {string}
-  //     </p>))
-  // );
-
-  const handleIngMeaDrink = (data) => {
+  const formatIngredients = (data) => {
     const filteredIngredients = data.filter((key) => key[0]
-      .includes('strIngredient') && key[1] !== (null && ''));
+      .includes('strIngredient') && (key[1] !== null && key[1] !== ''));
     const ingArray = filteredIngredients.reduce((acc, value) => [...acc, value[1]], []);
     const filteredMeasures = data.filter((key) => key[0]
-      .includes('strMeasure') && key[1] !== (null && ' '));
+      .includes('strMeasure') && (key[1] !== null && key[1] !== ' '));
     const meaArray = filteredMeasures.reduce((acc, value) => [...acc, value[1]], []);
-    const arrayToMap = ingArray.map((ing, index) => `- ${ing} - ${meaArray[index]}`);
+    return ingArray.map((ing, index) => `- ${ing} - ${meaArray[index]}`);
+  };
 
+  const renderIngredients = (data) => {
+    const arrayToMap = formatIngredients(data);
     return (
       arrayToMap.map((string, index) => (
         <p
@@ -100,7 +90,7 @@ function RecipesDetails() {
             <h3 data-testid="recipe-category">
               { currRecipe[LowerType][0].strAlcoholic }
             </h3>) }
-        {currRecipe.drinks && handleIngMeaDrink(Object.entries(currRecipe[LowerType][0]))}
+        {currRecipe && renderIngredients(Object.entries(currRecipe[LowerType][0]))}
         <p data-testid="instructions">
           { currRecipe[LowerType][0].strInstructions }
         </p>
@@ -116,16 +106,61 @@ function RecipesDetails() {
     global.alert('Link copied');
   }
 
+  // const doneRecipes = [{
+  //   id: '52977',
+  //   type: 'meals',
+  //   nationality: 'Turkish',
+  //   category: 'Side',
+  //   alcoholicOrNot: '',
+  //   name: 'Corba',
+  //   image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
+  //   doneDate: '04/05/2022',
+  //   tags: ['Soup'],
+  // }];
+  // const inProgressRecipes = {
+  //   cocktails: {
+  //     13501: ['- Amaretto - 1/3 ', '- Baileys irish cream - 1/3 ', '- Cognac - 1/3 '],
+  //   },
+  //   meals: {
+  //     506546: [],
+  //   },
+  // };
+
+  const startRecipe = () => {
+    const LowerType = currRecipe.drinks ? 'drinks' : 'meals';
+    const ingredientsList = formatIngredients(Object.entries(currRecipe[LowerType][0]));
+    saveInProgressRecipes(pathArray[1], id, ingredientsList);
+    history.push(`/${pathArray[1]}/${id}/in-progress`);
+  };
+
+  const renderStartBtn = () => {
+    const LowerType = currRecipe.drinks ? 'drinks' : 'meals';
+    const upperType = currRecipe.drinks ? 'Drink' : 'Meal';
+    const drinkOrMeal = currRecipe.drinks ? 'cocktails' : 'meals';
+    const objectId = currRecipe[LowerType][0][`id${upperType}`];
+    const existInDone = getDoneRecipes()
+      .filter((recipe) => recipe.id === objectId);
+    const existProgress = getInProgressRecipes()[drinkOrMeal][objectId];
+    if (existInDone.length === 0) {
+      return (
+        <button
+          type="button"
+          className="startBtn"
+          data-testid="start-recipe-btn"
+          onClick={ (existProgress !== undefined)
+            ? () => history.push(`/${pathArray[1]}/${id}/in-progress`)
+            : startRecipe }
+        >
+          {(existProgress !== undefined) ? 'Continue Recipe' : 'Start Recipe' }
+        </button>);
+    }
+  };
+
   return (
     <div>
       RecipesDetails
       <p>{ pathname }</p>
       { currRecipe && recipeRender() }
-      {/* <button
-        type="button"
-      >
-        Favoritar
-      </button> */}
       <div
         style={ {
           margin: 'auto',
@@ -157,6 +192,7 @@ function RecipesDetails() {
         />
         Compartilhar
       </button>
+      { currRecipe && renderStartBtn()}
     </div>
   );
 }

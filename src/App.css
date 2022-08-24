@@ -79,6 +79,18 @@
   width: 100%;
 }
 
+.startBtn {
+  background-color: #0fa36b;
+  bottom: 0;
+  color: black;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+}
+
 /* video-responsive copied from
 https://dev.to/bravemaster619/
 simplest-way-to-embed-a-youtube-video-in-your-react-app-3bk2 */
