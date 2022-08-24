@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import DetailCards from '../components/DetailCards';
 import { fetchRecipe } from '../services/getAPI';
 import { getDoneRecipes,
   getInProgressRecipes, saveInProgressRecipes } from '../helpers/handleLocalStorage';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+
+const copy = require('clipboard-copy');
 
 function RecipesDetails() {
   const [currRecipe, setCurrRecipe] = useState();
   const history = useHistory();
+  const [showMessage, setShowMessage] = useState(false);
 
   const { pathname } = history.location;
   const pathArray = pathname.split('/');
@@ -26,6 +27,11 @@ function RecipesDetails() {
     };
     getInfo();
   }, [type, id]);
+
+  useEffect(() => {
+    const messageDuration = 2000;
+    setTimeout(() => { setShowMessage(false); }, messageDuration);
+  }, [showMessage]);
 
   const handleYoutube = (url) => {
     const newUrl = url.includes('watch') ? url.replace('watch?v=', 'embed/') : url;
@@ -100,32 +106,6 @@ function RecipesDetails() {
       </>
     );
   };
-  function clipboard() {
-    const url = window.location.href.toString();
-    navigator.clipboard.writeText(url);
-    global.alert('Link copied');
-  }
-
-  // const doneRecipes = [{
-  //   id: '52977',
-  //   type: 'meals',
-  //   nationality: 'Turkish',
-  //   category: 'Side',
-  //   alcoholicOrNot: '',
-  //   name: 'Corba',
-  //   image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
-  //   doneDate: '04/05/2022',
-  //   tags: ['Soup'],
-  // }];
-  // const inProgressRecipes = {
-  //   cocktails: {
-  //     13501: ['- Amaretto - 1/3 ', '- Baileys irish cream - 1/3 ', '- Cognac - 1/3 '],
-  //   },
-  //   meals: {
-  //     506546: [],
-  //   },
-  // };
-
   const startRecipe = () => {
     const LowerType = currRecipe.drinks ? 'drinks' : 'meals';
     const ingredientsList = formatIngredients(Object.entries(currRecipe[LowerType][0]));
@@ -157,42 +137,46 @@ function RecipesDetails() {
     }
   };
 
+  function clipboard() {
+    const url = window.location.href.toString();
+    copy(url);
+    setShowMessage(true);
+  }
+
+  // function addFavorite() {
+  //   const LowerType = currRecipe.drinks ? 'drink' : 'food';
+  //   const favorite = {
+  //     id,
+  //     type: LowerType,
+  //   }
+  //   saveFavoriteOrDoneRecipes()
+  // }
+
   return (
     <div>
       RecipesDetails
       <p>{ pathname }</p>
+      { showMessage && <p>Link copied!</p> }
       { currRecipe && recipeRender() }
-      <div
-        style={ {
-          margin: 'auto',
-          display: 'block',
-          width: 'fit-content',
-        } }
-      >
-        <FormControlLabel
-          data-testid="favorite-btn"
-          control={ <Checkbox
-            icon={ <FavoriteBorder /> }
-            checkedIcon={ <Favorite /> }
-            name="checkedH"
-          /> }
-          label="Favoritar"
-        />
-      </div>
-      <button
+
+      <input
+        type="image"
+        data-testid="favorite-btn"
+        src={ whiteHeartIcon }
+        alt="button"
+
+      />
+      <input
         data-testid="share-btn"
-        type="button"
+        type="image"
         onClick={ clipboard }
-        value="Exibir Alert"
-      >
-        <img
-          src="src/images/shareIcon.svg"
-          height="80"
-          width="100"
-          alt="button"
-        />
-        Compartilhar
-      </button>
+        src={ shareIcon }
+        height="80"
+        width="50"
+        alt="button"
+      />
+      <br />
+      <br />
       { currRecipe && renderStartBtn()}
     </div>
   );
