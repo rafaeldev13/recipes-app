@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { fetchRecipe } from '../services/getAPI';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import DetailCards from '../components/DetailCards';
+import { fetchRecipe } from '../services/getAPI';
 import { getDoneRecipes,
   getInProgressRecipes, saveInProgressRecipes } from '../helpers/handleLocalStorage';
 
@@ -96,6 +100,11 @@ function RecipesDetails() {
       </>
     );
   };
+  function clipboard() {
+    const url = window.location.href.toString();
+    navigator.clipboard.writeText(url);
+    global.alert('Link copied');
+  }
 
   // const doneRecipes = [{
   //   id: '52977',
@@ -152,6 +161,37 @@ function RecipesDetails() {
       RecipesDetails
       <p>{ pathname }</p>
       { currRecipe && recipeRender() }
+      <div
+        style={ {
+          margin: 'auto',
+          display: 'block',
+          width: 'fit-content',
+        } }
+      >
+        <FormControlLabel
+          data-testid="favorite-btn"
+          control={ <Checkbox
+            icon={ <FavoriteBorder /> }
+            checkedIcon={ <Favorite /> }
+            name="checkedH"
+          /> }
+          label="Favoritar"
+        />
+      </div>
+      <button
+        data-testid="share-btn"
+        type="button"
+        onClick={ clipboard }
+        value="Exibir Alert"
+      >
+        <img
+          src="src/images/shareIcon.svg"
+          height="80"
+          width="100"
+          alt="button"
+        />
+        Compartilhar
+      </button>
       { currRecipe && renderStartBtn()}
     </div>
   );
