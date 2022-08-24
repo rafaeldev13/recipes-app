@@ -12,7 +12,8 @@ export function saveInProgressRecipes(type, id, ingredientsList) {
   const prevStorage = localStorage.getItem('inProgressRecipes');
 
   if (prevStorage === null) {
-    const objToSave = { [category]: recipe };
+    const storageBase = { cocktails: {}, meals: {} };
+    const objToSave = { ...storageBase, [category]: recipe };
     localStorage.setItem('inProgressRecipes', JSON.stringify(objToSave));
   } else {
     const storageObj = JSON.parse(prevStorage);
