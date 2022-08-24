@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import DetailCards from '../components/DetailCards';
 import { fetchRecipe } from '../services/getAPI';
-import { getDoneRecipes,
-  getInProgressRecipes, saveInProgressRecipes } from '../helpers/handleLocalStorage';
+import {
+  getFavoriteOrDoneRecipes,
+  getInProgressRecipes,
+  saveInProgressRecipes,
+  saveFavoriteOrDoneRecipes,
+  removeFavoriteOrDoneRecipes,
+} from '../helpers/handleLocalStorage';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -13,12 +19,20 @@ function RecipesDetails() {
   const [currRecipe, setCurrRecipe] = useState();
   const history = useHistory();
   const [showMessage, setShowMessage] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { pathname } = history.location;
   const pathArray = pathname.split('/');
   const type = pathArray[1].charAt(0).toUpperCase() + pathArray[1].slice(1);
   const invertedType = (type === 'Foods') ? 'Drinks' : 'Foods';
   const id = pathArray[2];
+
+  useEffect(() => {
+    const favorites = getFavoriteOrDoneRecipes();
+    if (favorites !== undefined) {
+      setIsFavorite(favorites.some((el) => el.id === id));
+    }
+  }, []);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -29,7 +43,7 @@ function RecipesDetails() {
   }, [type, id]);
 
   useEffect(() => {
-    const messageDuration = 2000;
+    const messageDuration = 200000;
     setTimeout(() => { setShowMessage(false); }, messageDuration);
   }, [showMessage]);
 
@@ -118,7 +132,7 @@ function RecipesDetails() {
     const upperType = currRecipe.drinks ? 'Drink' : 'Meal';
     const drinkOrMeal = currRecipe.drinks ? 'cocktails' : 'meals';
     const objectId = currRecipe[LowerType][0][`id${upperType}`];
-    const existInDone = getDoneRecipes()
+    const existInDone = getFavoriteOrDoneRecipes(true)
       .filter((recipe) => recipe.id === objectId);
     console.log(getInProgressRecipes());
     const existProgress = getInProgressRecipes()[drinkOrMeal][objectId];
@@ -143,14 +157,32 @@ function RecipesDetails() {
     setShowMessage(true);
   }
 
-  // function addFavorite() {
-  //   const LowerType = currRecipe.drinks ? 'drink' : 'food';
-  //   const favorite = {
-  //     id,
-  //     type: LowerType,
-  //   }
-  //   saveFavoriteOrDoneRecipes()
-  // }
+  function addFavorite() {
+    const LowerType = currRecipe.drinks ? 'drink' : 'food';
+    const recipeType = currRecipe.drinks ? 'drinks' : 'meals';
+    const nameKey = currRecipe.drinks ? 'strDrink' : 'strMeal';
+    const imageKey = currRecipe.drinks ? 'strDrinkThumb' : 'strMealThumb';
+    const recipe = currRecipe[recipeType][0];
+    const favorite = {
+      id,
+      type: LowerType,
+      nationality: recipe.strArea || '',
+      category: recipe.strCategory || '',
+      alcoholicOrNot: recipe.strAlcoholic || '',
+      name: recipe[nameKey],
+      image: recipe[imageKey],
+    };
+    saveFavoriteOrDoneRecipes(favorite);
+  }
+
+  function handleFavorite() {
+    if (!isFavorite) {
+      addFavorite();
+    } else {
+      removeFavoriteOrDoneRecipes(id);
+    }
+    setIsFavorite(getFavoriteOrDoneRecipes().some((el) => el.id === id));
+  }
 
   return (
     <div>
@@ -160,11 +192,11 @@ function RecipesDetails() {
       { currRecipe && recipeRender() }
 
       <input
-        type="image"
         data-testid="favorite-btn"
-        src={ whiteHeartIcon }
-        alt="button"
-
+        type="image"
+        onClick={ handleFavorite }
+        src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+        alt="favorite button"
       />
       <input
         data-testid="share-btn"

@@ -70,19 +70,11 @@ export function removeFavoriteOrDoneRecipes(id, isDone = false) {
   }
 }
 
-export function getDoneRecipes() {
-  const prevStorage = localStorage.getItem('doneRecipes');
+export function getFavoriteOrDoneRecipes(isDone = false) {
+  const key = isDone ? 'doneRecipes' : 'favoriteRecipes';
+  const prevStorage = localStorage.getItem(key);
   if (prevStorage === null) {
     return [];
-  }
-
-  return JSON.parse(prevStorage);
-}
-
-export function getFavoriteRecipes() {
-  const prevStorage = localStorage.getItem('favoriteRecipes');
-  if (prevStorage === null) {
-    return {};
   }
 
   return JSON.parse(prevStorage);
