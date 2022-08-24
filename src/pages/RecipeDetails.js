@@ -21,7 +21,7 @@ function RecipesDetails() {
       setCurrRecipe(result);
     };
     getInfo();
-  }, []);
+  }, [type, id]);
 
   const handleYoutube = (url) => {
     const newUrl = url.includes('watch') ? url.replace('watch?v=', 'embed/') : url;
@@ -131,6 +131,7 @@ function RecipesDetails() {
     const objectId = currRecipe[LowerType][0][`id${upperType}`];
     const existInDone = getDoneRecipes()
       .filter((recipe) => recipe.id === objectId);
+    console.log(getInProgressRecipes());
     const existProgress = getInProgressRecipes()[drinkOrMeal][objectId];
     if (existInDone.length === 0) {
       return (
