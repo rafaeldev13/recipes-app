@@ -31,6 +31,8 @@ function FoodsInProgress() {
       image={ str2 }
       category={ strCategory }
       instructions={ strInstructions }
+      recipe={ recipe }
+      id={ ID }
     />);
   }
 

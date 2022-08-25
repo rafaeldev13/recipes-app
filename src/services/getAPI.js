@@ -16,9 +16,7 @@ export async function fetchIngredient(type, option, value) {
   if (type === 'Drinks') {
     try {
       const response = await fetch(`${URL_DRINK}filter.php?${converted}=${value}`);
-      console.log(response);
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (err) {
       global.alert(NOT_FOUND);

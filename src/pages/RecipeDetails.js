@@ -6,12 +6,11 @@ import {
   getFavoriteOrDoneRecipes,
   getInProgressRecipes,
   saveInProgressRecipes,
-  saveFavoriteOrDoneRecipes,
-  removeFavoriteOrDoneRecipes,
 } from '../helpers/handleLocalStorage';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import handleFavorite from '../helpers/favoriteHelper';
 
 const copy = require('clipboard-copy');
 
@@ -156,33 +155,6 @@ function RecipesDetails() {
     setShowMessage(true);
   }
 
-  function addFavorite() {
-    const LowerType = currRecipe.drinks ? 'drink' : 'food';
-    const recipeType = currRecipe.drinks ? 'drinks' : 'meals';
-    const nameKey = currRecipe.drinks ? 'strDrink' : 'strMeal';
-    const imageKey = currRecipe.drinks ? 'strDrinkThumb' : 'strMealThumb';
-    const recipe = currRecipe[recipeType][0];
-    const favorite = {
-      id,
-      type: LowerType,
-      nationality: recipe.strArea || '',
-      category: recipe.strCategory || '',
-      alcoholicOrNot: recipe.strAlcoholic || '',
-      name: recipe[nameKey],
-      image: recipe[imageKey],
-    };
-    saveFavoriteOrDoneRecipes(favorite);
-  }
-
-  function handleFavorite() {
-    if (!isFavorite) {
-      addFavorite();
-    } else {
-      removeFavoriteOrDoneRecipes(id);
-    }
-    setIsFavorite(getFavoriteOrDoneRecipes().some((el) => el.id === id));
-  }
-
   return (
     <div>
       RecipesDetails
@@ -193,7 +165,7 @@ function RecipesDetails() {
       <input
         data-testid="favorite-btn"
         type="image"
-        onClick={ handleFavorite }
+        onClick={ () => handleFavorite(id, currRecipe, isFavorite, setIsFavorite) }
         src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
         alt="favorite button"
       />
