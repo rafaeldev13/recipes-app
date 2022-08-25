@@ -4,9 +4,13 @@ import propTypes from 'prop-types';
 export const recipeContext = createContext();
 
 function RecipesProvider({ children }) {
+  const binary = Number(localStorage.getItem('refreshComponent')) === 0;
   const [currType, setCurrType] = useState('Foods');
+  const [refreshComponent, setRefreshComponent] = useState(!binary);
   const [currRecipes, setCurrRecipes] = useState({ meals: [] });
   const value = {
+    refreshComponent,
+    setRefreshComponent,
     currType,
     setCurrType,
     currRecipes,
