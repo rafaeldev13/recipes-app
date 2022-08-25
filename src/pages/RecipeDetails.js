@@ -134,7 +134,6 @@ function RecipesDetails() {
     const objectId = currRecipe[LowerType][0][`id${upperType}`];
     const existInDone = getFavoriteOrDoneRecipes(true)
       .filter((recipe) => recipe.id === objectId);
-    console.log(getInProgressRecipes());
     const existProgress = getInProgressRecipes()[drinkOrMeal][objectId];
     if (existInDone.length === 0) {
       return (
