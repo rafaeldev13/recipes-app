@@ -1,130 +1,49 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import RecipeProgress from '../components/RecipesProgres';
 import { fetchRecipe } from '../services/getAPI';
-import checkCheckBox from '../helpers/checkCheckBox';
-// import data1 from '../data';
 
-function RecipeInProgress() {
-  // if (!localStorage.getItem('inProgressRecipes')) {
-  //   const dataMock = JSON.stringify(data1);
-  //   localStorage.setItem('inProgressRecipes', dataMock);
-  // }
-
-  const data = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-  const FOODS = 'Foods';
-
-  const aux1 = data.meals ? Object.keys(data.meals) : [];
-  const aux2 = data.cocktails ? Object.keys(data.cocktails) : [];
-
-  const ID_FOODS = [...aux1, ...aux2];
-
-  const DRINKS = 'Drinks';
-  let result = [];
-  let auxiliar;
-  const ingredientesFoods = ID_FOODS.map((id) => {
-    if (data.meals && data.cocktails) {
-      auxiliar = data.meals[id] || data.cocktails[id];
-    } else if (data.meals && !data.cocktails) {
-      auxiliar = data.meals[id];
-    } else {
-      auxiliar = data.cocktails[id];
-    }
-
-    result = auxiliar.map((el) => [el, false]);
-    return result;
-  });
-
-  function verificaCheckBox(target, ind, ind2) {
-    if (target.checked) {
-      // console.log(ingredientesFoods[ind][0][ind2][1]);
-      ingredientesFoods[ind][ind2][1] = true;
-    } else {
-      ingredientesFoods[ind][ind2][1] = false;
-    }
-    return ingredientesFoods;
-  }
+function FoodsInProgress() {
   const history = useHistory();
-  const [recipes, setRecipes] = useState([]);
-  const btnFinishDisable = true;
+  const path = history.location.pathname.split('/');
+  const ID = path[2];
+
+  const type = path[1] === 'foods' ? 'meals' : 'drinks';
+  const type0 = type === 'meals' ? 'Foods' : 'Drinks';
+  const [food, setFood] = useState({});
 
   useEffect(() => {
-    const eu2 = [];
-    const dadosTeste = async () => {
-      const eu3 = [];
-      ID_FOODS.forEach(async (id) => {
-        const fix = 49000;
-        if (id > fix) {
-          const { meals } = await fetchRecipe(FOODS, id);
-          eu3.push(meals);
-          setRecipes(eu2.concat(eu3));
-        } else {
-          const { drinks } = await fetchRecipe(DRINKS, id);
-          eu3.push(drinks);
-          setRecipes(eu2.concat(eu3));
-        }
-      });
-    };
-    dadosTeste();
-  }, [FOODS, DRINKS]);
+    async function fetchFoodById() {
+      setFood(await fetchRecipe(type0, ID));
+    }
+    fetchFoodById();
+  }, [type0, ID]);
+
+  function renderRecipes() {
+    const recipe = food;
+    const str1 = recipe[type][0].strMeal || recipe[type][0].strDrink;
+    const str2 = recipe[type][0].strMealThumb || recipe[type][0].strDrinkThumb;
+    const { strCategory, strInstructions } = recipe[type][0];
+    return (<RecipeProgress
+      foodObject={ recipe[type][0] }
+      title={ str1 }
+      image={ str2 }
+      category={ strCategory }
+      instructions={ strInstructions }
+    />);
+  }
 
   return (
     <div>
-      {recipes.map((elem, index) => {
-        const ingredientes = ingredientesFoods;
-
-        const nameCheckBox = Object.keys(elem[0])[0] === 'idMeal'
-          ? 'foods' : 'drinks';
-
-        return (
-          <div key={ index }>
-            <img
-              style={ { width: '200px' } }
-              // data-testid="recipe-photo"
-              src={ elem[0].strMealThumb || elem[0].strDrinkThumb }
-              alt="receita"
-            />
-            <h2 data-testid="recipe-title">{elem[0].strMeal || elem[0].strDrink}</h2>
-            <p data-testid="recipe-category">{elem[0].strCategory}</p>
-            <p data-testid="instructions">{elem[0].strInstructions}</p>
-            <h3>Ingredientes</h3>
-            <ul>
-              {ingredientes[index].map((ingrediente, ind) => (
-                <li
-                  key={ ind }
-                  id={ `${ind}-${nameCheckBox}-${index}` }
-                  data-testid={ `${ind}-ingredient-step` }
-                >
-                  {ingrediente}
-                  <input
-                    type="checkbox"
-                    name={ nameCheckBox }
-                    data-testid={ `${ind}-ingredient-step` }
-                    onChange={ ({ target }) => {
-                      checkCheckBox(`${ind}-${nameCheckBox}-${index}`);
-                      const ing = !verificaCheckBox(target, index, ind)[index]
-                        .every((ingrediente2) => ingrediente2[1] === true);
-                      document.getElementById(index).disabled = ing;
-                    } }
-                  />
-                </li>
-              ))}
-            </ul>
-            <input type="button" data-testid="share-btn" value="Compartilhar" />
-            <input type="button" data-testid="favorite-btn" value="Favoritar" />
-            <input
-              disabled={ btnFinishDisable }
-              id={ index }
-              name={ `${index}-Name` }
-              type="button"
-              data-testid="finish-recipe-btn"
-              onClick={ () => history.push('/done-recipes') }
-              value="Finalizar Receita"
-            />
-          </div>);
-      })}
+      {Object.keys(food).length !== 0
+       && (renderRecipes())}
     </div>
   );
 }
 
-export default RecipeInProgress;
+FoodsInProgress.propTypes = {
+  match: PropTypes.shape({}),
+}.isRequired;
+
+export default FoodsInProgress;
