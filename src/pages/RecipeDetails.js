@@ -43,7 +43,8 @@ function RecipesDetails() {
 
   useEffect(() => {
     const messageDuration = 200000;
-    setTimeout(() => { setShowMessage(false); }, messageDuration);
+    const timeOut = setTimeout(() => { setShowMessage(false); }, messageDuration);
+    return () => { clearTimeout(timeOut); };
   }, [showMessage]);
 
   const handleYoutube = (url) => {
