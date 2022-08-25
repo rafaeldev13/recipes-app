@@ -7,12 +7,7 @@ import Header from '../components/Header';
 function Profile() {
   const history = useHistory();
 
-  const getEmail = () => {
-    const email = getFromStorage('user');
-    if (email !== null) {
-      return Object.values(JSON.parse(email));
-    }
-  };
+  const getEmail = () => getFromStorage('user').email;
 
   const handleLogout = () => {
     localStorage.clear();

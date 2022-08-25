@@ -66,7 +66,7 @@ describe('Testa a página de detalhes das receitas', () => {
       // let clip = '';
       // navigator.clipboard.readText().then((text) => clip = text)
 
-      expect(navigator.clipboard.readText()).toBe('/drinks/15997');
+      expect(navigator.clipboard.readText).toBe('/drinks/15997');
       // expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
       // expect(navigator.clipboard.writeText).toHaveBeenCalledWith('/drinks/15997')
     })

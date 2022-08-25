@@ -3,7 +3,11 @@ export function saveOnStorage(key, value) {
 }
 
 export function getFromStorage(key) {
-  return localStorage.getItem(key);
+  const storage = localStorage.getItem(key);
+  if (storage !== null) {
+    return JSON.parse(storage);
+  }
+  return '';
 }
 
 export function saveInProgressRecipes(type, id, ingredientsList) {

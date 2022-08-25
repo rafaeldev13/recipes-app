@@ -27,12 +27,10 @@ function SearchBar() {
     let returned = {};
     if (option === 'ingredient') {
       const result = await fetchIngredient(currType, option, toSearch);
-      console.log(result);
       setCurrRecipes(result);
       returned = result;
     } else {
       const result = await fetchOption(currType, option, toSearch);
-      console.log(result);
       returned = result;
       setCurrRecipes(result);
     }
