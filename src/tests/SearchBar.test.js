@@ -98,4 +98,82 @@ describe('Testa o componente SearchBar', () => {
       expect(screen.getByText(/Acid/i)).toBeInTheDocument();
     });
   });
+
+  it('Deve exibir mensagem de não encontrado para comidas não existentes', async () => {
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>
+    );
+    history.push('/foods');
+    
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const NOT_FOUND = 'Sorry, we haven\'t found any recipes for these filters.';
+
+    // Busca por ingrediente
+    userEvent.click(screen.getByTestId('search-top-btn'));
+    userEvent.type(screen.getByTestId('search-input'), 'NotFound');
+    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+    
+    await waitFor(() => {
+      expect(global.alert).toBeCalledWith(NOT_FOUND);
+    })
+
+    // Busca por nome
+    userEvent.click(screen.getByTestId('name-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+
+    await waitFor(() => {
+      expect(global.alert).toBeCalledWith(NOT_FOUND);
+    })
+
+    // Busca por primeira letra
+    userEvent.type(screen.getByTestId('search-input'), 'z');
+    userEvent.click(screen.getByTestId('first-letter-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+
+    await waitFor(() => {
+      expect(global.alert).toHaveBeenNthCalledWith(3, NOT_FOUND);
+    })
+  });
+
+  it('Deve exibir mensagem de não encontrado para bebidas não existentes', async () => {
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>
+    );
+    history.push('/drinks');
+    
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const NOT_FOUND = 'Sorry, we haven\'t found any recipes for these filters.';
+
+    // Busca por ingrediente
+    userEvent.click(screen.getByTestId('search-top-btn'));
+    userEvent.type(screen.getByTestId('search-input'), 'NotFound');
+    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+    
+    await waitFor(() => {
+      expect(global.alert).toBeCalledWith(NOT_FOUND);
+    })
+
+    // Busca por nome
+    userEvent.click(screen.getByTestId('name-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+
+    await waitFor(() => {
+      expect(global.alert).toBeCalledWith(NOT_FOUND);
+    })
+
+    // Busca por primeira letra
+    userEvent.type(screen.getByTestId('search-input'), 'x');
+    userEvent.click(screen.getByTestId('first-letter-search-radio'));
+    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+
+    await waitFor(() => {
+      expect(global.alert).toHaveBeenNthCalledWith(3, NOT_FOUND);
+    })
+  });
 });

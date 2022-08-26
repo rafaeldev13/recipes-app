@@ -33,12 +33,17 @@ function RecipesDetails() {
     }
   }, []);
 
+  const [isMounted, setIsMounted] = useState(true);
+
   useEffect(() => {
     const getInfo = async () => {
       const result = await fetchRecipe(type, id);
       setCurrRecipe(result);
     };
-    getInfo();
+    if (isMounted) {
+      getInfo();
+    }
+    return () => setIsMounted(false);
   }, [type, id]);
 
   useEffect(() => {

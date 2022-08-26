@@ -6,6 +6,12 @@ import RecipesProvider from '../context/RecipesProvider';
 import renderWithRouter from '../helpers/renderWithRouter';
 import App from '../App';
 
+Object.assign(navigator, {
+  clipboard: {
+    writeText: () => {},
+  },
+});
+
 describe('Testa a página de detalhes das receitas', () => {
   it('Deve realizar um fetch da com o endpoint correto para uma bebida', async () => {
     const { history } = renderWithRouter(
@@ -68,10 +74,10 @@ describe('Testa a página de detalhes das receitas', () => {
     await waitFor(() => {
       userEvent.click(screen.getByTestId('favorite-btn'));      
     })
-    // history.push('/favorite-recipes')
-    // await waitFor(() => {
-    //   expect(screen.getByText(/Corba/i)).toBeInTheDocument();
-    // })
+    history.push('/favorite-recipes')
+    await waitFor(() => {
+      expect(screen.getByText(/Corba/i)).toBeInTheDocument();
+    })
   })
 
   it('Deve salvar receita de bebida favoritada e aparecer na página de receitas favoritas', async () => {
@@ -90,63 +96,35 @@ describe('Testa a página de detalhes das receitas', () => {
       userEvent.click(screen.getByTestId('favorite-btn'));      
     })
 
-    // await waitFor(() => {
-    //   expect(localStorage.setItem).toHaveBeenCalledTimes(1);
-    // })
-
-    // history.push('/favorite-recipes')
-    // await waitFor(() => {
-    //   expect(screen.getByText(/GG/i)).toBeInTheDocument();
-    // })
+    history.push('/favorite-recipes')
+    await waitFor(() => {
+      expect(screen.getByText(/GG/i)).toBeInTheDocument();
+    })
   })
 
-  it('Deve copiar o link ao clicar em compartilhar em bebidas', async () => {
+  it('Deve copiar o link ao clicar em compartilhar', async () => {
     const { history } = renderWithRouter(
       <RecipesProvider>
         <App />
       </RecipesProvider>
     );
-    history.push('/foods/52977');
-    // await waitFor(() => {
-    //   expect(screen.getByTestId('1-card-img')).toBeInTheDocument();
-    // })
-    // await waitFor(() => {
-    // })
+
+    jest.spyOn(navigator.clipboard, "writeText");
     
+    history.push('/foods/52977');
     await waitFor(() => {
-      // jest.useFakeTimers();
-      // jest.runAllTimers();
-      setTimeout(() => {
-      userEvent.click(screen.getByTestId('share-btn'));
-      }, 5000);
-    })
-    // await act(() => {
-    //   userEvent.click(screen.getByTestId('share-btn'));
-    // })
+      expect(screen.getByText(/corba/i)).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByTestId('share-btn'));
+    expect(navigator.clipboard.writeText).toHaveBeenCalled();
 
-    // await waitFor(() => {
-    //   expect(screen.getByText('Link copied!')).toBeInTheDocument();
-    // })
+    history.push('/drinks/178319');
+    await waitFor(() => {
+      expect(screen.getByText(/aquamarine/i)).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByTestId('share-btn'));
+    expect(navigator.clipboard.writeText).toHaveBeenCalled();
   })
-
-  // it('Deve copiar o link ao clicar em compartilhar em comidas', async () => {
-  //   const { history } = renderWithRouter(
-  //     <RecipesProvider>
-  //       <App />
-  //     </RecipesProvider>
-  //   );
-  //   history.push('/foods/52977');
-
-  //   await waitFor(() => {
-  //     userEvent.click(screen.getByTestId('share-btn'));      
-  //   })
-  //   await waitFor(() => {
-  //     // let clip = '';
-  //     // navigator.clipboard.readText().then((text) => clip = text)
-  //     // expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
-  //     // expect(navigator.clipboard.writeText).toHaveBeenCalledWith('/drinks/15997')
-  //   })
-  // })
 
   it('Deve conter o botão start recipe redirecionando para in progress', async () => {
     const { history } = renderWithRouter(
@@ -162,6 +140,16 @@ describe('Testa a página de detalhes das receitas', () => {
     })
     await waitFor(() => {      
       expect(history.location.pathname).toBe('/foods/52977/in-progress');
+    })
+
+    history.push('/drinks/178319');
+
+    await waitFor(() => {
+      expect(screen.getByText(/start recipe/i)).toBeInTheDocument();
+      userEvent.click(screen.getByTestId('start-recipe-btn'));      
+    })
+    await waitFor(() => {      
+      expect(history.location.pathname).toBe('/drinks/178319/in-progress');
     })
   })
 

@@ -12,12 +12,16 @@ function FoodsInProgress() {
   const type = path[1] === 'foods' ? 'meals' : 'drinks';
   const type0 = type === 'meals' ? 'Foods' : 'Drinks';
   const [food, setFood] = useState({});
+  const [isMounted, setIsMounted] = useState(true);
 
   useEffect(() => {
     async function fetchFoodById() {
       setFood(await fetchRecipe(type0, ID));
     }
-    fetchFoodById();
+    if (isMounted) {
+      fetchFoodById();
+    }
+    return () => setIsMounted(false);
   }, [type0, ID]);
 
   function renderRecipes() {
