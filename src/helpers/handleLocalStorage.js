@@ -38,15 +38,15 @@ export function getInProgressRecipes() {
   return JSON.parse(prevStorage);
 }
 
-export function removeInProgressRecipes(type, id) {
-  const prevStorage = localStorage.getItem('inProgressRecipes');
-  if (prevStorage === null) { return; }
+// export function removeInProgressRecipes(type, id) {
+//   const prevStorage = localStorage.getItem('inProgressRecipes');
+//   if (prevStorage === null) { return; }
 
-  const category = type === 'food' ? 'meals' : 'cocktails';
-  const prevStorageObj = JSON.parse(prevStorage);
-  delete prevStorageObj[category][id];
-  localStorage.setItem('inProgressRecipes', JSON.stringify(prevStorageObj));
-}
+//   const category = type === 'food' ? 'meals' : 'cocktails';
+//   const prevStorageObj = JSON.parse(prevStorage);
+//   delete prevStorageObj[category][id];
+//   localStorage.setItem('inProgressRecipes', JSON.stringify(prevStorageObj));
+// }
 
 // para salvar, remover ou acessar receitas favoritas ignore o parâmetro isDone.
 // para salvar, remover ou acessar receitas prontas passe true no parâmetro isDone.

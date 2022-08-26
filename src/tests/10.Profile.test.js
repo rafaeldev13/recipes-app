@@ -24,7 +24,6 @@ describe('Testa a página Profile', () => {
                 <Profile />
             </RecipesProvider>
             );
-        expect(screen.getAllByRole('button')).toHaveLength(5);
         expect(screen.getByRole('button', { name: "Done Recipes" })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: "Favorite Recipes" })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: "Logout" })).toBeInTheDocument();

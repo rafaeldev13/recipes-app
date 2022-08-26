@@ -24,16 +24,20 @@ export async function fetchIngredient(type, option, value) {
     }
   }
 }
+
 export async function fetchOption(type, option, value) {
   const converted = option === 'name' ? 's' : 'f';
   if (type === 'Foods') {
-    const response = await fetch(`${URL_FOOD}search.php?${converted}=${value}`);
-    const data = await response.json();
-    if (data.meals !== null) {
+    try {
+      const response = await fetch(`${URL_FOOD}search.php?${converted}=${value}`);
+      const data = await response.json();
+
+      if (data.meals === null) {
+        global.alert(NOT_FOUND);
+        return { meals: [] };
+      }
       return data;
-    }
-    if (data.meals === null) {
-      global.alert(NOT_FOUND);
+    } catch (err) {
       return { meals: [] };
     }
   }
@@ -54,27 +58,15 @@ export async function fetchOption(type, option, value) {
 }
 
 export async function fetchCategory(type) {
-  if (type === 'Foods') {
-    const response = await fetch(`${URL_FOOD}list.php?c=list`);
-    const data = await response.json();
-    return data;
-  }
-  if (type === 'Drinks') {
-    const response = await fetch(`${URL_DRINK}list.php?c=list`);
-    const data = await response.json();
-    return data;
-  }
+  const BASE_URL = type === 'Foods' ? URL_FOOD : URL_DRINK;
+  const response = await fetch(`${BASE_URL}list.php?c=list`);
+  const data = await response.json();
+  return data;
 }
 
 export async function fetchRecipe(type, id) {
-  if (type === 'Foods') {
-    const response = await fetch(`${URL_FOOD}lookup.php?i=${id}`);
-    const data = await response.json();
-    return data;
-  }
-  if (type === 'Drinks') {
-    const response = await fetch(`${URL_DRINK}lookup.php?i=${id}`);
-    const data = await response.json();
-    return data;
-  }
+  const BASE_URL = type === 'Foods' ? URL_FOOD : URL_DRINK;
+  const response = await fetch(`${BASE_URL}lookup.php?i=${id}`);
+  const data = await response.json();
+  return data;
 }
