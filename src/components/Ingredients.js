@@ -8,11 +8,11 @@ function Ingredients(props) {
   const { setRefreshComponent } = useContext(recipeContext);
 
   const { foodObject, testId } = props;
+  const ID = foodObject.idMeal || foodObject.idDrink;
   const [savedCheckbox, setSavedCheckbox] = useState([]);
   const [loading, setLoading] = useState(false);
   const [idFood, setIdFood] = useState(0);
   useEffect(() => {
-    const ID = foodObject.idMeal || foodObject.idDrink;
     setIdFood(ID);
     if (!localStorage.getItem('food')) {
       localStorage.setItem('food', JSON.stringify({}));
@@ -22,7 +22,7 @@ function Ingredients(props) {
       setSavedCheckbox(savedFood[ID]);
     }
     setLoading(true);
-  }, [foodObject.idMeal, foodObject.idDrink]);
+  }, [foodObject.idMeal, foodObject.idDrink, ID]);
 
   function handleClick({ target }, index) {
     checkCheckBox(index);
@@ -41,7 +41,7 @@ function Ingredients(props) {
         JSON.stringify({ [idFood]: { [index]: true, ...savedFood[idFood] } }));
     }
     const savedFood = JSON.parse(localStorage.getItem('food'));
-    const trueIngred = Object.values(savedFood['52980']).length;
+    const trueIngred = Object.values(savedFood[ID]).length;
     const totalIngred = Number(localStorage.getItem('quantIngredient'));
     setRefreshComponent(trueIngred !== totalIngred);
     const binary = trueIngred !== totalIngred ? 1 : 0;
@@ -50,19 +50,23 @@ function Ingredients(props) {
   }
 
   function displayIngredients(mesures) {
-    return mesures.map((mesure, index) => (
-      <form action="" key={ index }>
-        <label htmlFor="checkboxIngredient" data-testid={ `${index}-${testId}` }>
-          <span id={ index }>{mesure}</span>
-          <input
-            name="checkboxIngredient"
-            type="checkbox"
-            onChange={ (event) => handleClick(event, index) }
-            checked={ !!savedCheckbox[index] }
-          />
-        </label>
-      </form>
-    ));
+    return mesures.map((mesure, index) => {
+      const classRiscado = savedCheckbox[index] ? 'riscado' : '';
+      console.log(savedCheckbox[index]);
+      return (
+        <form action="" key={ index }>
+          <label htmlFor="checkboxIngredient" data-testid={ `${index}-${testId}` }>
+            <span className={ classRiscado } id={ index }>{mesure}</span>
+            <input
+              name="checkboxIngredient"
+              type="checkbox"
+              onChange={ (event) => handleClick(event, index) }
+              checked={ !!savedCheckbox[index] }
+            />
+          </label>
+        </form>
+      );
+    });
   }
 
   function generateArrayOfIngredientsAndMeasures(response) {

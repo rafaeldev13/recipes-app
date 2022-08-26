@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { recipeContext } from '../context/RecipesProvider';
 import Ingredients from './Ingredients';
@@ -17,6 +18,8 @@ function RecipeProgress(props) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
+  const history = useHistory();
+
   useEffect(() => {
     const messageDuration = 200000;
     setTimeout(() => { setShowMessage(false); }, messageDuration);
@@ -27,7 +30,7 @@ function RecipeProgress(props) {
     if (favorites !== undefined) {
       setIsFavorite(favorites.some((el) => el.id === id));
     }
-  }, []);
+  }, [id]);
 
   function clipboard() {
     const url = window.location.href.toString();
@@ -70,6 +73,7 @@ function RecipeProgress(props) {
         data-testid="finish-recipe-btn"
         type="button"
         disabled={ refreshComponent }
+        onClick={ () => history.push('/done-recipes') }
       >
         Finalizar
       </button>
