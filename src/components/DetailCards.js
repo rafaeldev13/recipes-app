@@ -9,13 +9,17 @@ import 'react-multi-carousel/lib/styles.css';
 function DetailCards({ typeOf }) {
   const history = useHistory();
   const [recomended, setRecomended] = useState(undefined);
+  const [isMounted, setIsMounted] = useState(true);
 
   useEffect(() => {
-    const getRecomended = async () => {
-      const currRecomended = await fetchOption(typeOf, 'name', '');
-      setRecomended(currRecomended);
-    };
-    getRecomended();
+    if (isMounted) {
+      const getRecomended = async () => {
+        const currRecomended = await fetchOption(typeOf, 'name', '');
+        setRecomended(currRecomended);
+      };
+      getRecomended();
+    }
+    return () => setIsMounted(false);
   }, []);
 
   const handleRedirect = ({ target }) => {
