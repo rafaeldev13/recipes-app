@@ -33,7 +33,7 @@ localStorage.setItem('doneRecipes', JSON.stringify(mockData)); */
 function DoneRecipes() {
   const [filter, setFilter] = useState('');
   const [recipesFilter, setRecipesFilter] = useState(getFavoriteOrDoneRecipes(true));
-  const [recipeId, setRecipeId] = useState('');
+  const [saveId, setSaveId] = useState('');
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function DoneRecipes() {
     const type = recipe.type === 'food' ? 'foods' : 'drinks';
     copy(`http://localhost:3000/${type}/${recipe.id}`);
     setShowMessage(true);
-    setRecipeId(recipe.id);
+    setSaveId(recipe.id);
   }
 
   return (
@@ -81,51 +81,51 @@ function DoneRecipes() {
         </button>
       </nav>
       <main>
-        {recipesFilter.map((data, dataIndex) => (
-          <article key={ data.id }>
-            <Link to={ `/${data.type}s/${data.id}` }>
+        {recipesFilter.map((recipe, recipeIndex) => (
+          <article key={ recipe.id }>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
               <img
-                src={ data.image }
-                alt={ data.name }
+                src={ recipe.image }
+                alt={ recipe.name }
                 width="300px"
-                data-testid={ `${dataIndex}-horizontal-image` }
+                data-testid={ `${recipeIndex}-horizontal-image` }
               />
-              <h2 data-testid={ `${dataIndex}-horizontal-name` }>{data.name}</h2>
+              <h2 data-testid={ `${recipeIndex}-horizontal-name` }>{recipe.name}</h2>
             </Link>
-            <div data-testid={ `${dataIndex}-horizontal-top-text` }>
-              { data.type === 'food'
+            <div data-testid={ `${recipeIndex}-horizontal-top-text` }>
+              { recipe.type === 'food'
                 ? (
                   <p>
-                    { `${data.nationality} - ${data.category}` }
+                    { `${recipe.nationality} - ${recipe.category}` }
                   </p>
                 )
                 : (
                   <>
-                    <p>{ data.category }</p>
-                    <p>{data.alcoholicOrNot}</p>
+                    <p>{ recipe.category }</p>
+                    <p>{recipe.alcoholicOrNot}</p>
                   </>)}
             </div>
-            <p data-testid={ `${dataIndex}-horizontal-done-date` }>
-              {`Done in: ${data.doneDate}`}
+            <p data-testid={ `${recipeIndex}-horizontal-done-date` }>
+              {`Done in: ${recipe.doneDate}`}
             </p>
             <p>
-              { data.tags.map((tagName) => (
+              { recipe.tags.map((tagName) => (
                 <span
                   key={ tagName }
-                  data-testid={ `${dataIndex}-${tagName}-horizontal-tag` }
+                  data-testid={ `${recipeIndex}-${tagName}-horizontal-tag` }
                 >
                   { ` #${tagName} ` }
                 </span>
               ))}
             </p>
-            <button type="button" onClick={ () => clipboard(data) }>
+            <button type="button" onClick={ () => clipboard(recipe) }>
               <img
                 src={ ShareIcon }
                 alt="Share Icon"
-                data-testid={ `${dataIndex}-horizontal-share-btn` }
+                data-testid={ `${recipeIndex}-horizontal-share-btn` }
               />
             </button>
-            { showMessage && recipeId === data.id ? <span>Link copied!</span> : ''}
+            { showMessage && saveId === recipe.id ? <span>Link copied!</span> : ''}
           </article>)) }
       </main>
     </div>
