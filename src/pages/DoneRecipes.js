@@ -6,30 +6,6 @@ import ShareIcon from '../images/shareIcon.svg';
 
 const copy = require('clipboard-copy');
 
-/* const mockData = [{
-  id: '52771',
-  type: 'food',
-  nationality: 'French',
-  category: 'Side',
-  alcoholicOrNot: '',
-  name: 'Brie wrapped in prosciutto & brioche',
-  image: 'https://www.themealdb.com/images/media/meals/qqpwsy1511796276.jpg',
-  doneDate: '20/08/2022',
-  tags: ['SideDish', 'Treat', 'Baking'],
-},
-{
-  id: '3200',
-  type: 'drink',
-  nationality: '',
-  category: 'Ordinary Drink',
-  alcoholicOrNot: 'Alcoholic',
-  name: 'Owen\'s Grandmother\'s Revenge',
-  image: 'https://www.thecocktaildb.com/images/media/drink/0wt4uo1503565321.jpg',
-  doneDate: '20/08/2022',
-  tags: [],
-}];
-localStorage.setItem('doneRecipes', JSON.stringify(mockData)); */
-
 function DoneRecipes() {
   const [filter, setFilter] = useState('');
   const [recipesFilter, setRecipesFilter] = useState(getFavoriteOrDoneRecipes(true));
@@ -92,19 +68,11 @@ function DoneRecipes() {
               />
               <h2 data-testid={ `${recipeIndex}-horizontal-name` }>{recipe.name}</h2>
             </Link>
-            <div data-testid={ `${recipeIndex}-horizontal-top-text` }>
+            <p data-testid={ `${recipeIndex}-horizontal-top-text` }>
               { recipe.type === 'food'
-                ? (
-                  <p>
-                    { `${recipe.nationality} - ${recipe.category}` }
-                  </p>
-                )
-                : (
-                  <>
-                    <p>{ recipe.category }</p>
-                    <p>{recipe.alcoholicOrNot}</p>
-                  </>)}
-            </div>
+                ? `${recipe.nationality} - ${recipe.category}`
+                : recipe.alcoholicOrNot }
+            </p>
             <p data-testid={ `${recipeIndex}-horizontal-done-date` }>
               {`Done in: ${recipe.doneDate}`}
             </p>
@@ -125,7 +93,8 @@ function DoneRecipes() {
                 data-testid={ `${recipeIndex}-horizontal-share-btn` }
               />
             </button>
-            { showMessage && saveId === recipe.id ? <span>Link copied!</span> : ''}
+            { showMessage && saveId === recipe.id
+              ? <span data-testid={ `${recipeIndex}-copy-text` }>Link copied!</span> : ''}
           </article>)) }
       </main>
     </div>
