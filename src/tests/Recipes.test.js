@@ -3,15 +3,30 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import RecipesProvider from '../context/RecipesProvider';
 import Recipes from '../pages/Recipes';
+import renderWithRouter from '../helpers/renderWithRouter';
+import App from '../App';
 
 describe('Testa a página de receitas', () => {
   it('Deve mostrar o resultado apropriado ao clicar nos filtros', async () => {
-    render(<RecipesProvider><Recipes /></RecipesProvider>);
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>
+    );
+
+    history.push('/foods');
+
+    await waitFor(() => {
+      expect(screen.queryByText(/corba/i)).toBeInTheDocument();
+    })
 
     // Categoria Beef
     await waitFor(() => {
-      userEvent.click(screen.getByTestId('Beef-category-filter'));
+      expect(screen.getByTestId('Beef-category-filter')).toBeInTheDocument();
     });
+
+    userEvent.click(screen.getByTestId('Beef-category-filter'));
+
     await waitFor(() => {
       expect(screen.getByText(/Beef and Mustard Pie/i)).toBeInTheDocument();
       expect(screen.getByText(/Beef and Oyster pie/i)).toBeInTheDocument();
@@ -44,15 +59,21 @@ describe('Testa a página de receitas', () => {
   });
 
   it('Testa os filtros da página de bebidas', async () => {
-    render(
+    const { history } = renderWithRouter(
       <RecipesProvider>
-        <Recipes foodOrDrink='Drinks' />
+        <App />
       </RecipesProvider>
     );
 
+    history.push('/drinks');
+
+    await waitFor(() => {
+      expect(screen.queryByText(/gg/i)).toBeInTheDocument();
+    })
+
     // Categoria Shake
     await waitFor(() => {
-      userEvent.click(screen.getByTestId('Shake-category-filter'));
+      userEvent.click(screen.getByText(/Shake/i));
     });
     await waitFor(() => {
       expect(screen.getByText(/151 Florida Bushwacker/i)).toBeInTheDocument();

@@ -55,10 +55,14 @@ function Ingredients(props) {
       console.log(savedCheckbox[index]);
       return (
         <form action="" key={ index }>
-          <label htmlFor="checkboxIngredient" data-testid={ `${index}-${testId}` }>
+          <label
+            htmlFor={ `${index}checkboxIngredient` }
+            data-testid={ `${index}-${testId}` }
+          >
             <span className={ classRiscado } id={ index }>{mesure}</span>
             <input
-              name="checkboxIngredient"
+              id={ `${index}checkboxIngredient` }
+              name={ `${index}checkboxIngredient` }
               type="checkbox"
               onChange={ (event) => handleClick(event, index) }
               checked={ !!savedCheckbox[index] }

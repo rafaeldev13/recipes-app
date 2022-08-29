@@ -68,9 +68,9 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(screen.getByRole('button', { name: /buscar/i }));
     
     await waitFor(() => {
-      expect(screen.getByText(/Archbishop/i)).toBeInTheDocument();
-      expect(screen.getByText(/Berry Deadly/i)).toBeInTheDocument();
-      expect(screen.getByText(/Clove Cocktail/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Archbishop/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Berry Deadly/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Clove Cocktail/i)).toBeInTheDocument();
     });
 
     // Busca por nome
@@ -93,9 +93,9 @@ describe('Testa o componente SearchBar', () => {
     userEvent.click(screen.getByRole('button', { name: /buscar/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Avalon/i)).toBeInTheDocument();
-      expect(screen.getByText(/Abilene/i)).toBeInTheDocument();
-      expect(screen.getByText(/Acid/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Avalon/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Abilene/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Acid/i)).toBeInTheDocument();
     });
   });
 
@@ -129,9 +129,9 @@ describe('Testa o componente SearchBar', () => {
     })
 
     // Busca por primeira letra
-    userEvent.type(screen.getByTestId('search-input'), 'z');
-    userEvent.click(screen.getByTestId('first-letter-search-radio'));
-    userEvent.click(screen.getByRole('button', { name: /buscar/i }));
+    userEvent.type(screen.queryByTestId('search-input'), 'z');
+    userEvent.click(screen.queryByTestId('first-letter-search-radio'));
+    userEvent.click(screen.queryByRole('button', { name: /buscar/i }));
 
     await waitFor(() => {
       expect(global.alert).toHaveBeenNthCalledWith(3, NOT_FOUND);

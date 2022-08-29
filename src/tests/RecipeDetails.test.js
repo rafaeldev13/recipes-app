@@ -153,7 +153,7 @@ describe('Testa a página de detalhes das receitas', () => {
     })
   })
 
-  it('Deve ter o botão Continue Recipe que redireciona para a página in progress', async () => {
+  it('Deve ter o botão Continue Recipe que redireciona para a página in progress - Comidas', async () => {
     const { history } = renderWithRouter(
       <RecipesProvider>
         <App />
@@ -163,8 +163,9 @@ describe('Testa a página de detalhes das receitas', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/start recipe/i)).toBeInTheDocument();
-      userEvent.click(screen.getByText(/start recipe/i));      
+      userEvent.click(screen.getByText(/start recipe/i));
     })
+
     await waitFor(() => {      
       expect(history.location.pathname).toBe('/foods/53060/in-progress');
       history.push('/foods/53060');
@@ -177,5 +178,42 @@ describe('Testa a página de detalhes das receitas', () => {
     await waitFor(() => {      
       expect(history.location.pathname).toBe('/foods/53060/in-progress');
     })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Burek/i)).toBeInTheDocument();
+    })
+  })
+
+  it('Deve ter o botão Continue Recipe que redireciona para a página in progress - Bebidas', async () => {
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>
+    );
+    history.push('/drinks/17203');
+
+    await waitFor(() => {
+      expect(screen.queryByText(/start recipe/i)).toBeInTheDocument();
+      userEvent.click(screen.queryByText(/start recipe/i));      
+    })
+
+    await waitFor(() => {      
+      expect(history.location.pathname).toBe('/drinks/17203/in-progress');
+      history.push('/drinks/17203');
+    })
+
+    await waitFor(() => {      
+      expect(history.location.pathname).toBe('/drinks/17203');
+      expect(screen.queryByText(/continue recipe/i)).toBeInTheDocument();
+      userEvent.click(screen.queryByText(/continue recipe/i));   
+    })
+    await waitFor(() => {      
+      expect(history.location.pathname).toBe('/drinks/17203/in-progress');
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/kir/i)).toBeInTheDocument();
+    })
+
   })
 })
