@@ -31,33 +31,42 @@ function DetailCards({ typeOf }) {
     const type = data.drinks ? 'drinks' : 'meals';
     const newArray = data[type].slice(0, SIX);
     const result = newArray.map((recipe, index) => {
-      const id = recipe.idDrink
-        ? recipe.idDrink
-        : recipe.idMeal;
-      const image = recipe.idDrink
-        ? recipe.strDrinkThumb
-        : recipe.strMealThumb;
-      const name = recipe.idDrink
-        ? recipe.strDrink
-        : recipe.strMeal;
+      const recipeData = recipe.idDrink ? (
+        {
+          id: recipe.idDrink,
+          image: recipe.strDrinkThumb,
+          name: recipe.strDrink,
+        }
+      ) : (
+        {
+          id: recipe.idMeal,
+          image: recipe.strMealThumb,
+          name: recipe.strMeal,
+        }
+      );
       return (
         <div
-          key={ id }
-          id={ id }
+          key={ recipeData.id }
+          id={ recipeData.id }
           role="button"
-          tabIndex={ id }
+          tabIndex={ recipeData.id }
           data-testid={ `${index}-recomendation-card` }
           onClick={ handleRedirect }
           onKeyDown={ handleRedirect }
         >
           <img
-            src={ image }
-            alt={ name }
-            id={ id }
+            src={ recipeData.image }
+            alt={ recipeData.name }
+            id={ recipeData.id }
             width="200px"
             data-testid={ `${index}-card-img` }
           />
-          <p id={ id } data-testid={ `${index}-recomendation-title` }>{ `${name}` }</p>
+          <p
+            id={ recipeData.id }
+            data-testid={ `${index}-recomendation-title` }
+          >
+            { `${recipeData.name}` }
+          </p>
         </div>
       );
     });
