@@ -18,7 +18,7 @@ describe('Testa a página Profile', () => {
         expect(screen.getByTestId("profile-email").textContent).toBe("teste@teste.com");
     })
 
-    it('Verifica se os botões "Done Recipes", "Favorite Recipes" e "Logout" são renderizados', () => {
+    it('Verifica se todos os botões são renderizados', () => {
         render(
             <RecipesProvider>
                 <Profile />

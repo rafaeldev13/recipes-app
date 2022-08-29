@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { getFavoriteOrDoneRecipes } from '../helpers/handleLocalStorage';
 import ShareIcon from '../images/shareIcon.svg';
@@ -8,6 +9,7 @@ const copy = require('clipboard-copy');
 function DoneRecipes() {
   const [filter, setFilter] = useState('');
   const [recipesFilter, setRecipesFilter] = useState(getFavoriteOrDoneRecipes(true));
+  const [saveId, setSaveId] = useState('');
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
@@ -25,6 +27,7 @@ function DoneRecipes() {
     const type = recipe.type === 'food' ? 'foods' : 'drinks';
     copy(`http://localhost:3000/${type}/${recipe.id}`);
     setShowMessage(true);
+    setSaveId(recipe.id);
   }
 
   return (
@@ -53,41 +56,45 @@ function DoneRecipes() {
           Drinks
         </button>
       </nav>
-      { showMessage && <p>Link copied!</p> }
       <main>
-        {recipesFilter.map((data, dataIndex) => (
-          <article key={ data.id }>
-            <img
-              src={ data.image }
-              alt={ data.name }
-              width="300px"
-              data-testid={ `${dataIndex}-horizontal-image` }
-            />
-            <h2 data-testid={ `${dataIndex}-horizontal-name` }>{data.name}</h2>
-            <p data-testid={ `${dataIndex}-horizontal-top-text` }>
-              {`${data.nationality} - ${data.category}`}
-            </p>
-            {data.alcoholicOrNot && <p>{data.alcoholicOrNot}</p>}
-            <p data-testid={ `${dataIndex}-horizontal-done-date` }>
-              {`Done date: ${data.doneDate}`}
-            </p>
-            <button type="button" onClick={ () => clipboard(data) }>
+        {recipesFilter.map((recipe, recipeIndex) => (
+          <article key={ recipe.id }>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
               <img
-                src={ ShareIcon }
-                alt="Share Icon"
-                data-testid={ `${dataIndex}-horizontal-share-btn` }
+                src={ recipe.image }
+                alt={ recipe.name }
+                width="300px"
+                data-testid={ `${recipeIndex}-horizontal-image` }
               />
-            </button>
+              <h2 data-testid={ `${recipeIndex}-horizontal-name` }>{recipe.name}</h2>
+            </Link>
+            <p data-testid={ `${recipeIndex}-horizontal-top-text` }>
+              { recipe.type === 'food'
+                ? `${recipe.nationality} - ${recipe.category}`
+                : recipe.alcoholicOrNot }
+            </p>
+            <p data-testid={ `${recipeIndex}-horizontal-done-date` }>
+              {`Done in: ${recipe.doneDate}`}
+            </p>
             <p>
-              { data.tags.map((tagName) => (
+              { recipe.tags.map((tagName) => (
                 <span
                   key={ tagName }
-                  data-testid={ `${dataIndex}-${tagName}-horizontal-tag` }
+                  data-testid={ `${recipeIndex}-${tagName}-horizontal-tag` }
                 >
                   { ` #${tagName} ` }
                 </span>
               ))}
             </p>
+            <button type="button" onClick={ () => clipboard(recipe) }>
+              <img
+                src={ ShareIcon }
+                alt="Share Icon"
+                data-testid={ `${recipeIndex}-horizontal-share-btn` }
+              />
+            </button>
+            { showMessage && saveId === recipe.id
+              ? <span data-testid={ `${recipeIndex}-copy-text` }>Link copied!</span> : ''}
           </article>)) }
       </main>
     </div>
