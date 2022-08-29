@@ -23,7 +23,7 @@ function Login() {
         type="email"
         name="email"
         value={ email }
-        placeholder="Digite seu email"
+        placeholder="Email"
         onChange={ (event) => setEmail(event.target.value) }
       />
       <input
@@ -31,7 +31,7 @@ function Login() {
         type="password"
         name="password"
         value={ password }
-        placeholder="Digite sua senha"
+        placeholder="Password"
         onChange={ (event) => setPassword(event.target.value) }
       />
       <button
@@ -40,7 +40,7 @@ function Login() {
         disabled={ !(validate(email) && password.length >= MIN_PASSWORD_LENGTH) }
         onClick={ handleClick }
       >
-        Entrar
+        Log In
       </button>
       { shouldRedirect && <Redirect to="/foods" />}
     </div>
